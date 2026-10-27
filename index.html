@@ -1,0 +1,596 @@
+<!doctype html><html lang="es"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Guía viva M2T6 · Recolección</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;600&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: cuaderno de campo; una columna de lectura con paneles blancos por sección, caso fijo arriba */
+:root{
+  --paper:#f2f3ee; --panel:#ffffff; --ink:#1c2925; --muted:#5a6a64; --line:#d9ded5;
+  --main:#14705d; --main-soft:#e2f0eb; --main-ink:#0d4c3f;
+  --amber:#b87a06; --amber-soft:#fbefd4;
+  --ok:#2a7a37; --ok-soft:#e4f3e6; --bad:#b3262e; --bad-soft:#fbe5e6;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Public Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111816; --panel:#19221f; --ink:#e4ebe8; --muted:#9aaca5; --line:#2b3833;
+  --main:#4fc4a8; --main-soft:#1b3530; --main-ink:#a6e8d7;
+  --amber:#e7b04c; --amber-soft:#36291170;
+  --ok:#72c680; --ok-soft:#1b3320; --bad:#ff8088; --bad-soft:#3d1c1f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111816; --panel:#19221f; --ink:#e4ebe8; --muted:#9aaca5; --line:#2b3833;
+  --main:#4fc4a8; --main-soft:#1b3530; --main-ink:#a6e8d7;
+  --amber:#e7b04c; --amber-soft:#36291170;
+  --ok:#72c680; --ok-soft:#1b3320; --bad:#ff8088; --bad-soft:#3d1c1f; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 60px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,6vw,3.1rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.4rem,3.6vw,1.85rem);font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--main)}
+.muted{color:var(--muted)}
+code,.mono{font-family:var(--f-mono);font-size:.9em}
+
+header.hero{display:flex;flex-direction:column;gap:14px;padding-top:8px}
+.hero .lead{font-size:1.12rem;max-width:62ch}
+.case{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--amber);border-radius:var(--r);padding:16px 18px;display:grid;gap:6px}
+.case b{font-family:var(--f-display)}
+.case .tag{font-family:var(--f-mono);font-size:.72rem;color:var(--amber);text-transform:uppercase;letter-spacing:.08em}
+
+nav.toc{display:flex;flex-wrap:wrap;gap:8px}
+nav.toc a{font-family:var(--f-mono);font-size:.78rem;text-decoration:none;color:var(--main-ink);background:var(--main-soft);padding:5px 10px;border-radius:99px}
+nav.toc a:hover,nav.toc a:focus-visible{outline:2px solid var(--main)}
+
+section.sec{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px clamp(16px,4vw,30px);display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.sec-head{display:flex;gap:14px;align-items:flex-start}
+.num{font-family:var(--f-display);font-weight:800;font-size:2.2rem;line-height:1;color:var(--main);min-width:2.2ch}
+.sec-head p{margin-top:6px;color:var(--muted)}
+.body{max-width:68ch}
+
+/* Tarjetas qué/dice/traiciona */
+.tri{display:grid;gap:10px}
+.tri div{display:grid;grid-template-columns:150px 1fr;gap:10px;padding:10px 12px;border-radius:8px;background:var(--paper)}
+.tri dt,.tri .k{font-family:var(--f-mono);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding-top:3px}
+.tri .bad{background:var(--bad-soft)} .tri .bad .k{color:var(--bad)}
+.tri .cs{background:var(--amber-soft)} .tri .cs .k{color:var(--amber)}
+@media (max-width:560px){.tri div{grid-template-columns:1fr;gap:2px}}
+
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;color:inherit;cursor:pointer}
+.tab,.chip{border:1.5px solid var(--line);background:var(--panel);border-radius:99px;padding:7px 14px;font-size:.92rem;font-weight:600}
+.tab[aria-selected="true"]{background:var(--main);border-color:var(--main);color:var(--panel)}
+.tab:focus-visible,.chip:focus-visible,.btn:focus-visible,.opt:focus-visible,.sw:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.btn{border:0;background:var(--main);color:var(--panel);border-radius:8px;padding:9px 16px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--main);border:1.5px solid var(--main)}
+
+/* Interruptores */
+.steps{display:grid;gap:8px}
+.step{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:8px}
+.step .n{font-family:var(--f-mono);color:var(--muted);font-size:.8rem}
+.step.off{background:var(--bad-soft);border-color:var(--bad)}
+.sw{width:52px;height:28px;border-radius:99px;border:0;background:var(--main);position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:27px;width:22px;height:22px;border-radius:50%;background:var(--panel);transition:left .15s}
+.sw[aria-checked="false"]{background:var(--line)}
+.sw[aria-checked="false"]::after{left:3px}
+.risk{border-radius:8px;padding:12px 14px;background:var(--ok-soft);color:var(--ink)}
+.risk.on{background:var(--bad-soft)}
+.risk ul{margin:6px 0 0;padding-left:20px}
+
+/* Retos de clasificación */
+.items{display:grid;gap:10px}
+.item{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:10px}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opt{border:1.5px solid var(--line);background:var(--paper);border-radius:7px;padding:6px 12px;font-size:.88rem;font-weight:600}
+.opt.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.fb{font-size:.92rem;border-left:3px solid var(--main);padding-left:10px}
+.fb.no{border-color:var(--bad)}
+.score{font-family:var(--f-mono);font-size:.85rem;color:var(--muted)}
+
+/* Notas */
+.note{border-radius:8px;padding:12px 14px;font-size:.93rem;display:grid;gap:4px}
+.note .k{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.note.pdf{background:var(--bad-soft);border:1px dashed var(--bad)} .note.pdf .k{color:var(--bad)}
+.note.prac{background:var(--amber-soft);border:1px dashed var(--amber)} .note.prac .k{color:var(--amber)}
+
+/* Abierta / cerrada */
+.compare{display:grid;gap:12px}
+.qbox{font-family:var(--f-display);font-size:1.15rem;font-weight:700}
+.bars{display:grid;gap:7px}
+.bar{display:grid;grid-template-columns:minmax(0,170px) 1fr 3.5ch;gap:10px;align-items:center;font-size:.9rem}
+.bar .track{height:14px;background:var(--paper);border-radius:4px;overflow:hidden}
+.bar .fill{height:100%;background:var(--main)}
+.bar .v{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.quotes{display:grid;gap:8px}
+.quote{background:var(--paper);border-radius:8px;padding:10px 12px;font-style:italic}
+.quote span{display:block;font-style:normal;font-family:var(--f-mono);font-size:.72rem;color:var(--amber);margin-top:4px}
+
+/* Herramientas */
+.toolgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.tool{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.tool.hit{border:2px solid var(--main);background:var(--main-soft)}
+.tool h3{font-size:1rem}
+.tool p{font-size:.9rem}
+.sit{display:grid;gap:8px}
+.sitbtn{text-align:left;border:1.5px solid var(--line);background:var(--paper);border-radius:8px;padding:9px 12px;font-size:.93rem}
+.sitbtn[aria-pressed="true"]{border-color:var(--main);background:var(--main-soft)}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:520px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+
+details{border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+details summary{cursor:pointer;font-weight:700}
+details p{margin-top:6px;font-size:.93rem}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.cols{grid-template-columns:1fr}}
+.cols>div{display:grid;gap:8px;align-content:start;min-width:0}
+
+/* Ficha técnica */
+.ficha{font-family:var(--f-mono);font-size:.88rem;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ficha button{display:grid;grid-template-columns:minmax(0,170px) 1fr;gap:10px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:var(--panel);padding:10px 12px;font-family:inherit;font-size:inherit}
+.ficha button:last-child{border-bottom:0}
+.ficha button .k{color:var(--muted)}
+.ficha button[aria-pressed="true"]{background:var(--amber-soft)}
+.ficha button.good{background:var(--ok-soft)}
+.ficha button.miss{background:var(--bad-soft)}
+.ficha button.fp{background:var(--bad-soft);text-decoration:line-through}
+
+/* Chuleta */
+.cheat{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.cheat div{background:var(--paper);border-radius:8px;padding:12px;font-size:.92rem}
+.cheat b{display:block;font-family:var(--f-display);color:var(--main-ink);margin-bottom:2px}
+.final{font-family:var(--f-display);font-size:1.2rem;font-weight:700}
+footer{font-size:.85rem;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <span class="eyebrow">Módulo 2 · Tema 6 · Guía viva</span>
+  <h1>Recolección de datos</h1>
+  <p class="lead">Antes de limpiar, graficar o calcular, alguien tuvo que conseguir el dato. Este tema trata de cómo hacerlo bien: qué decidir antes de salir a campo, con qué herramienta, de qué fuente y cómo dejarlo documentado. Aquí no hay fórmulas.</p>
+  <div class="case">
+    <span class="tag">El caso que nos acompaña en toda la guía (ficticio)</span>
+    <p><b>La Secretaría de Salud de Montería</b> ve en el registro nominal que en la comuna 4 uno de cada cinco niños menores de 6 años tiene el esquema PAI atrasado. Quiere saber <b>cuántos</b> están atrasados de verdad y <b>por qué</b>. Tú diriges la recolección.</p>
+  </div>
+  <nav class="toc" aria-label="Secciones">
+    <a href="#s1">1 Metodología</a><a href="#s2">2 Plan</a><a href="#s3">3 Calidad</a><a href="#s4">4 Fuentes</a><a href="#s5">5 Tipo de dato</a><a href="#s6">6 Herramientas</a><a href="#s7">7 Secundarios</a><a href="#s8">8 Documentar</a><a href="#s9">9 Chuleta</a>
+  </nav>
+</header>
+
+<!-- 1 -->
+<section class="sec" id="s1">
+  <div class="sec-head"><span class="num">1</span><div><h2>Recolectar es decidir antes de preguntar</h2>
+  <p>La metodología es el camino por el que llegas al dato. El tema pide pensar cuatro cosas antes de diseñar cualquier formulario.</p></div></div>
+  <p class="body">La idea central del tema: la metodología debe apuntar a los datos <b>realmente importantes</b>, para no gastar recursos recogiendo cosas que nadie va a usar. Toca cada elemento:</p>
+  <div class="tabs" role="tablist" id="t1"></div>
+  <div class="tri" id="t1-out" aria-live="polite"></div>
+  <div class="note prac"><span class="k">Criterio práctico (no está en el PDF)</span>El tema dice que no hay métodos buenos ni malos; la elección depende del tipo de dato y del enfoque del investigador. En la práctica, la pregunta que más ayuda es: <i>"¿qué tabla o gráfico quiero tener al final?"</i>. Si lo dibujas primero, sabes qué recoger.</div>
+</section>
+
+<!-- 2 -->
+<section class="sec" id="s2">
+  <div class="sec-head"><span class="num">2</span><div><h2>El plan va antes del trabajo de campo, y empieza por el permiso</h2>
+  <p>El tema lista cinco pasos del planeamiento. La autorización es la condición previa: sin ella, lo demás no arranca.</p></div></div>
+  <p class="body">Apaga cualquier paso para ver qué le pasaría al estudio de Montería si lo omites.</p>
+  <div class="steps" id="t2"></div>
+  <div class="risk" id="t2-out" aria-live="polite"></div>
+  <div class="note prac"><span class="k">Criterio práctico · Colombia</span>En salud, "autorización" suele significar tres cosas: aval de un comité de ética (Resolución 8430 de 1993), consentimiento informado de quien responde y cumplimiento de la ley de protección de datos personales (Ley 1581 de 2012) cuando usas bases con nombres o documentos.</div>
+</section>
+
+<!-- 3 -->
+<section class="sec" id="s3">
+  <div class="sec-head"><span class="num">3</span><div><h2>Todo instrumento debe pasar tres pruebas</h2>
+  <p>Confiable, válido y objetivo. Se parecen, pero fallan por razones distintas.</p></div></div>
+  <div class="tri">
+    <div><span class="k">Confiabilidad</span><span><b>¿Da lo mismo si mido otra vez?</b> El tema la define como la capacidad de recoger y reproducir datos consistentes y coherentes. Piensa en una báscula que pesa igual al mismo niño dos veces seguidas.</span></div>
+    <div><span class="k">Validez</span><span><b>¿Mide lo que dice medir?</b> Es la certeza de que el instrumento mide cada variable que pretende. Una báscula muy precisa no sirve para medir la talla.</span></div>
+    <div><span class="k">Objetividad</span><span><b>¿El resultado depende de quién recoge?</b> El investigador no debe meter sus sesgos o prejuicios en los valores que reporta.</span></div>
+  </div>
+  <p class="body"><b>Reto:</b> en cada situación, ¿cuál de las tres pruebas falla?</p>
+  <div class="items" id="t3"></div>
+  <p class="score" id="t3-score"></p>
+</section>
+
+<!-- 4 -->
+<section class="sec" id="s4">
+  <div class="sec-head"><span class="num">4</span><div><h2>¿Lo recoges tú o ya existe?</h2>
+  <p>Primario: lo recoges de primera mano. Secundario: alguien ya lo documentó. Y lo secundario puede ser interno o externo según tu nivel de acceso.</p></div></div>
+  <div class="tri">
+    <div><span class="k">Primario</span><span>Recogido de primera mano, no sale de documentos anteriores. Por eso el tema lo llama específico, auténtico y preciso. También es el más caro y lento.</span></div>
+    <div><span class="k">Secundario interno</span><span>Es propiedad de la organización, que se reserva su uso. En el caso: las bases y actas de la propia Secretaría.</span></div>
+    <div><span class="k">Secundario externo</span><span>Se accede de forma más o menos abierta, al público general: DANE, INS, prensa, redes sociales.</span></div>
+  </div>
+  <p class="body"><b>Reto:</b> clasifica cada fuente desde el punto de vista de la Secretaría de Salud de Montería.</p>
+  <div class="items" id="t4"></div>
+  <p class="score" id="t4-score"></p>
+</section>
+
+<!-- 5 -->
+<section class="sec" id="s5">
+  <div class="sec-head"><span class="num">5</span><div><h2>La misma pregunta puede darte números o palabras</h2>
+  <p>Métodos cuantitativos dan un valor numérico que se puede operar. Métodos cualitativos dan palabras, emociones y percepciones que no se cuentan directamente.</p></div></div>
+  <div class="tri">
+    <div><span class="k">Cuantitativo</span><span>El tema lo recomienda <b>siempre que la variable lo permita</b> y su medición interese. Se tabula fácil y permite las medidas del tema 3.</span></div>
+    <div><span class="k">Cualitativo</span><span>Útil cuando no hay datos históricos o cuando no necesitas números. Sirve para entender el <i>por qué</i>.</span></div>
+  </div>
+  <p class="body">Cambia el formato de la pregunta y mira qué te devuelve el trabajo de campo:</p>
+  <div class="tabs" role="tablist" id="t5"></div>
+  <div class="compare">
+    <p class="qbox">"¿Por qué el niño no tiene las vacunas al día?"</p>
+    <div id="t5-out" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="sec" id="s6">
+  <div class="sec-head"><span class="num">6</span><div><h2>Cada herramienta resuelve una necesidad distinta</h2>
+  <p>Encuesta, sondeo, entrevista, Delphi, focus group y cuestionario. Elige una necesidad del caso y mira cuál conviene.</p></div></div>
+  <div class="sit" id="t6"></div>
+  <p class="fb" id="t6-out" aria-live="polite">Elige una necesidad para ver la recomendación.</p>
+  <div class="toolgrid" id="t6-grid"></div>
+
+  <h3>Las encuestas se clasifican de tres formas</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Según…</th><th>Tipos</th><th>En el caso de Montería</th></tr></thead>
+    <tbody>
+      <tr><td>Forma de aplicación</td><td>Por correo (postal), telefónica, personal (cara a cara)</td><td>Personal, casa a casa: muchos hogares no tienen teléfono fijo ni responden llamadas.</td></tr>
+      <tr><td>Objetivo</td><td>Descriptiva (retrata cómo están las cosas en un momento) · Analítica (busca explicar el problema para encontrar una solución)</td><td>Descriptiva: ¿cuántos niños están atrasados hoy? Analítica: ¿qué explica el atraso?</td></tr>
+      <tr><td>Tipo de pregunta</td><td>Abierta (respuesta libre, difícil de cuantificar) · Cerrada (opciones fijas, fácil de cuantificar)</td><td>Mayoría cerradas con opción "Otro", y una o dos abiertas.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note pdf"><span class="k">Ojo con el PDF</span>
+    <span>• <b>Encuesta analítica:</b> el texto dice que su objetivo es "explicar y describir" el problema. Describir es lo que hace la descriptiva; lo propio de la analítica es <b>explicar causas</b>.</span>
+    <span>• <b>Sondeos:</b> dice "puedes ir a las encuestas" cuando habla del pulso rápido; por el contexto quiso decir <b>sondeos</b>.</span>
+    <span>• <b>Entrevista telefónica:</b> dice que "no requiere de tiempo y dinero". Requiere <b>menos</b> que la presencial, no cero.</span>
+    <span>• <b>Delphi:</b> la descripción omite lo esencial, que va en la nota de abajo.</span>
+  </div>
+  <div class="note prac"><span class="k">Criterio práctico · Delphi</span>En la técnica Delphi los expertos responden de forma anónima y en varias rondas; tras cada ronda ven el resumen del grupo y ajustan su estimación, hasta acercarse a un consenso. El anonimato evita que el experto con más jerarquía arrastre a los demás.</div>
+</section>
+
+<!-- 7 -->
+<section class="sec" id="s7">
+  <div class="sec-head"><span class="num">7</span><div><h2>Un dato secundario vale lo que vale su metodología</h2>
+  <p>Ahorra tiempo y dinero, pero solo sirve si sabes cómo se recogió.</p></div></div>
+  <p class="body">El tema exige que las fuentes secundarias sean fiables y que se conozca la metodología con que se recogieron. Si están estructuradas o semiestructuradas y no requieren mucha manipulación, son más rápidas y baratas que salir a recoger datos primarios. Abre cada fuente:</p>
+  <div class="cols">
+    <div><h3>Internas (ejemplos del tema)</h3>
+      <details><summary>Registros de salud y seguridad</summary><p>En el caso: las actas de jornadas de vacunación y los reportes de supervisión de la Secretaría.</p></details>
+      <details><summary>Estados financieros e informes de ventas</summary><p>En salud, el equivalente es la ejecución presupuestal del PAI o los informes de biológicos recibidos y aplicados.</p></details>
+      <details><summary>Software CRM</summary><p>Cualquier sistema donde la organización registra a sus usuarios. En una EPS, su base de afiliados.</p></details>
+      <details><summary>Misión, visión y resúmenes ejecutivos</summary><p>Aportan contexto cualitativo: qué se propuso la organización y qué informó.</p></details>
+    </div>
+    <div><h3>Externas (ejemplos del tema)</h3>
+      <details><summary>Informes de gobiernos</summary><p>Suelen tener rigor metodológico conocido y documentado. En el caso: proyecciones de población del DANE o boletines del INS.</p></details>
+      <details><summary>Revistas de negocios y bibliotecas</summary><p>Fiables si publican su procedimiento y si el proceso fue riguroso. Cuidado: quien extrae el dato puede interpretarlo con sesgo.</p></details>
+      <details><summary>Comunicados de prensa</summary><p>Sujetos a interpretación y pueden traer sesgo. Úsalos como pista, no como cifra oficial.</p></details>
+      <details><summary>Internet y redes sociales</summary><p>Enorme volumen. Los datos de navegación suelen ser limpios salvo lo que el usuario manipula (como la ubicación del IP). En redes, el mensaje puede no reflejar la intención del emisor, por eso se analiza el sentimiento con procesamiento de lenguaje natural.</p></details>
+    </div>
+  </div>
+  <div class="note pdf"><span class="k">Ojo con el PDF</span>
+    <span>• La lista de fuentes <b>internas</b> incluye "Revistas". Una revista publicada es, por definición del propio tema, una fuente externa.</span>
+    <span>• Dice que un comunicado de prensa es "un dato cualitativo" por estar sujeto a interpretación. Un comunicado puede traer cifras; el problema real es el <b>sesgo de quien lo emite</b>, no el tipo de dato.</span>
+  </div>
+  <div class="note prac"><span class="k">Criterio práctico · tu día a día</span>RIPS, SIVIGILA, el registro nominal de vacunación o los cubos de SISPRO son datos secundarios: alguien los recogió con otra finalidad (facturar, notificar, registrar). Antes de llevarlos a Power BI, pregúntate quién los digitó, con qué reglas y qué pasa con los registros que faltan.</div>
+</section>
+
+<!-- 8 -->
+<section class="sec" id="s8">
+  <div class="sec-head"><span class="num">8</span><div><h2>Si no está documentado, nadie puede confiar en el dato</h2>
+  <p>Una recolección formal deja por escrito cinco cosas. Sin ellas, otro analista no puede repetir ni auditar tu trabajo.</p></div></div>
+  <div class="tri">
+    <div><span class="k">Lo que exige el tema</span><span>1) Herramienta usada · 2) Población del estudio · 3) Si hay muestra, cómo se seleccionó · 4) Ventana de tiempo en que se recogen los datos · 5) Período al que corresponden los datos.</span></div>
+  </div>
+  <p class="body"><b>Reto de auditoría:</b> esta es la ficha técnica que te entregó tu equipo. Marca las líneas que <b>no cumplen</b> lo que pide el tema y pulsa Revisar.</p>
+  <div class="ficha" id="t8"></div>
+  <div class="tabs"><button class="btn" id="t8-check" type="button">Revisar</button><button class="btn ghost" id="t8-reset" type="button">Reiniciar</button></div>
+  <div id="t8-out" aria-live="polite"></div>
+</section>
+
+<!-- 9 -->
+<section class="sec" id="s9">
+  <div class="sec-head"><span class="num">9</span><div><h2>Lo que tienes que llevarte</h2>
+  <p>Chuleta para repasar en dos minutos y un mini cuestionario para comprobar.</p></div></div>
+  <div class="cheat">
+    <div><b>Metodología</b>Tipo de estudio → población y muestra → técnica → tabulación y análisis. Todo se piensa antes de recoger.</div>
+    <div><b>Plan</b>Autorización (primero) · tiempo · recursos · capacitación · supervisión y coordinación.</div>
+    <div><b>Calidad del instrumento</b>Confiable (repite igual) · válido (mide lo que dice) · objetivo (sin sesgo del investigador).</div>
+    <div><b>Primario</b>De primera mano: específico, auténtico, preciso. Más caro y lento.</div>
+    <div><b>Secundario</b>Ya documentado. Interno (propio) o externo (abierto). Exige conocer su metodología.</div>
+    <div><b>Encuestas</b>Aplicación: correo, teléfono, personal. Objetivo: descriptiva o analítica. Preguntas: abiertas o cerradas (+ "Otro").</div>
+    <div><b>Focus group</b>Moderador experto + 6 a 8 participantes, elegidos por características, sin saber el tema de antemano.</div>
+    <div><b>Delphi</b>Expertos revisan sus estimaciones a partir de las de otros expertos.</div>
+    <div><b>CAPI</b>Entrevista cara a cara registrada en computador o tablet.</div>
+    <div><b>Documentar</b>Herramienta · población · selección de la muestra · ventana de recolección · período de referencia.</div>
+  </div>
+  <h3>Mini cuestionario</h3>
+  <div class="items" id="t9"></div>
+  <p class="final" id="t9-score"></p>
+</section>
+
+<footer>Guía basada en el PDF M2T6 «Recolección de datos» (TECH). Las notas de criterio práctico y los datos del caso de Montería no provienen del tema.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function el(tag, attrs, html){
+    var e = document.createElement(tag);
+    if (attrs) for (var k in attrs){ if (k === "class") e.className = attrs[k]; else e.setAttribute(k, attrs[k]); }
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+
+  /* ---------- 1 · Metodología ---------- */
+  var S1 = [
+    {k:"Tipo de estudio", q:"¿Qué clase de estudio estoy haciendo?",
+     d:"A partir del tipo de estudio se definen los elementos de la investigación, su contexto, su magnitud y los instrumentos idóneos.",
+     c:"Es un estudio con dos preguntas: cuántos niños están atrasados (necesita cifras) y por qué (necesita palabras). Eso ya anticipa una encuesta y una técnica cualitativa.",
+     t:"Cuando empiezas a escribir el formulario sin haber decidido si quieres medir «cuántos» o entender «por qué»."},
+    {k:"Población y muestra", q:"¿A quién le pregunto, a cuántos y cómo los escojo?",
+     d:"Definir la población estadística, calcular el tamaño de muestra que dé fiabilidad y establecer el tipo de muestreo.",
+     c:"Población: hogares de la comuna 4 con niños menores de 6 años. Muestra: 400 hogares, sorteando manzanas.",
+     t:"Cuando encuestas solo a las madres que llegan al puesto de salud. Esas ya vacunan, y la cobertura te sale inflada."},
+    {k:"Técnicas", q:"¿Con qué herramienta recojo cada dato?",
+     d:"Varían según el dato sea cualitativo o cuantitativo, y según sea primario o secundario.",
+     c:"Encuesta personal con tablet para la cifra; focus group con madres para las razones; el registro nominal como fuente secundaria para comparar.",
+     t:"Cuando eliges la herramienta por costumbre («siempre hacemos encuesta») y no por el tipo de dato."},
+    {k:"Tabulación y análisis", q:"¿Qué voy a poder calcular cuando tenga los datos?",
+     d:"Desde el inicio se piensa qué análisis permitirán los datos: los categóricos permiten unos y los cuantitativos otros.",
+     c:"Si preguntas la edad del niño en rangos («0-1 año, 2-3 años»), después no podrás calcular la edad promedio. Si la preguntas en meses, sí.",
+     t:"Cuando ya estás en Power BI y descubres que la variable que necesitabas para cruzar nunca se recogió."}
+  ];
+  var t1 = document.getElementById("t1"), t1o = document.getElementById("t1-out");
+  function show1(i){
+    var x = S1[i];
+    Array.prototype.forEach.call(t1.children, function(b, j){ b.setAttribute("aria-selected", j === i ? "true" : "false"); });
+    t1o.innerHTML =
+      '<div><span class="k">Qué pregunta responde</span><span><b>' + x.q + '</b></span></div>' +
+      '<div><span class="k">Cómo lo define el tema</span><span>' + x.d + '</span></div>' +
+      '<div class="cs"><span class="k">En el caso</span><span>' + x.c + '</span></div>' +
+      '<div class="bad"><span class="k">Cuándo te traiciona</span><span>' + x.t + '</span></div>';
+  }
+  S1.forEach(function(x, i){
+    var b = el("button", {"class":"tab", role:"tab", type:"button", "aria-selected":"false"}, x.k);
+    b.addEventListener("click", function(){ show1(i); });
+    t1.appendChild(b);
+  });
+  show1(0);
+
+  /* ---------- 2 · Plan ---------- */
+  var S2 = [
+    {k:"Autorización o acceso", r:"Sin aval ético ni acceso al registro nominal, el estudio se detiene a mitad de camino, y lo recogido sin consentimiento no se puede usar."},
+    {k:"Tiempo", r:"La recolección coincide con la jornada nacional de vacunación y las vacunadoras no tienen tiempo para las entrevistas."},
+    {k:"Recursos (humanos, económicos, físicos)", r:"Faltan tablets y transporte; los encuestadores cubren solo las manzanas cercanas y la muestra se sesga."},
+    {k:"Capacitación", r:"Cada encuestador lee la pregunta a su manera: el mismo hogar respondería distinto según quién llegue."},
+    {k:"Supervisión y coordinación", r:"Nadie verifica que se visiten las manzanas sorteadas y aparecen encuestas llenadas desde la oficina."}
+  ];
+  var on2 = S2.map(function(){ return true; });
+  var t2 = document.getElementById("t2"), t2o = document.getElementById("t2-out");
+  function render2(){
+    var off = [];
+    Array.prototype.forEach.call(t2.children, function(row, i){
+      row.classList.toggle("off", !on2[i]);
+      row.querySelector(".sw").setAttribute("aria-checked", on2[i] ? "true" : "false");
+      if (!on2[i]) off.push(S2[i]);
+    });
+    if (!off.length){
+      t2o.className = "risk";
+      t2o.innerHTML = "<b>Plan completo.</b> Los cinco pasos están previstos. Apaga alguno para ver el riesgo.";
+    } else {
+      t2o.className = "risk on";
+      var extra = !on2[0] ? "<p style=\"margin-top:8px\"><b>Sin autorización no hay estudio:</b> el tema la pone como primer paso, porque garantiza que podrás continuar.</p>" : "";
+      t2o.innerHTML = "<b>Riesgos del estudio</b><ul>" + off.map(function(x){ return "<li><b>" + x.k + ":</b> " + x.r + "</li>"; }).join("") + "</ul>" + extra;
+    }
+  }
+  S2.forEach(function(x, i){
+    var row = el("div", {"class":"step"});
+    row.appendChild(el("span", {"class":"n"}, String(i + 1)));
+    row.appendChild(el("span", null, "<b>" + x.k + "</b>"));
+    var sw = el("button", {"class":"sw", role:"switch", type:"button", "aria-checked":"true", "aria-label":"Incluir " + x.k});
+    sw.addEventListener("click", function(){ on2[i] = !on2[i]; render2(); });
+    row.appendChild(sw);
+    t2.appendChild(row);
+  });
+  render2();
+
+  /* ---------- Motor genérico de retos ---------- */
+  function quiz(containerId, scoreId, data, opts, finalMsg){
+    var box = document.getElementById(containerId), sc = document.getElementById(scoreId);
+    var done = 0, good = 0;
+    function upd(){
+      var msg = good + " de " + done + " correctas · faltan " + (data.length - done);
+      if (done === data.length && finalMsg) msg = finalMsg(good, data.length);
+      sc.textContent = msg;
+    }
+    data.forEach(function(it){
+      var card = el("div", {"class":"item"});
+      card.appendChild(el("p", null, it.q));
+      var row = el("div", {"class":"opts"});
+      var fb = el("p", {"class":"fb"}); fb.hidden = true;
+      var choices = it.o || opts;
+      var answered = false;
+      choices.forEach(function(o, j){
+        var b = el("button", {"class":"opt", type:"button"}, o);
+        b.addEventListener("click", function(){
+          if (answered) return;
+          answered = true; done++;
+          var ok = j === it.a;
+          if (ok) good++;
+          b.classList.add(ok ? "right" : "wrong");
+          if (!ok) row.children[it.a].classList.add("right");
+          fb.hidden = false;
+          fb.className = ok ? "fb" : "fb no";
+          fb.innerHTML = (ok ? "<b>Correcto.</b> " : "<b>No es esa.</b> ") + it.e;
+          upd();
+        });
+        row.appendChild(b);
+      });
+      card.appendChild(row); card.appendChild(fb);
+      box.appendChild(card);
+    });
+    upd();
+  }
+
+  /* ---------- 3 · Calidad ---------- */
+  quiz("t3", "t3-score", [
+    {q:"La báscula pediátrica de la IPS marca 12,4 kg y, al pesar de nuevo al mismo niño un minuto después, marca 13,1 kg.", a:0,
+     e:"Mismo niño, misma báscula, resultados distintos: el instrumento no reproduce datos consistentes. Eso es confiabilidad."},
+    {q:"Para medir «esquema completo», el formulario pregunta «¿El niño tiene carné de vacunación?».", a:1,
+     e:"Tener carné no significa tener las vacunas al día. La pregunta mide otra cosa: falla la validez."},
+    {q:"Un encuestador convencido de que «esas familias son descuidadas» anota «falta de interés» cuando la madre dice «no había la vacuna».", a:2,
+     e:"Su prejuicio cambió el dato. Eso es falta de objetividad: el sesgo del recolector entra en el resultado."},
+    {q:"Dos encuestadores aplican la misma pregunta al mismo hogar y obtienen respuestas diferentes, porque la pregunta es ambigua.", a:0,
+     e:"Trampa común: parece objetividad, pero nadie actuó con prejuicio. El instrumento no da resultados repetibles: falla la confiabilidad."},
+    {q:"Una encuesta que quiere medir «barreras de acceso a la vacunación» solo pregunta por la amabilidad del personal.", a:1,
+     e:"La amabilidad es una parte mínima del acceso; faltan horarios, distancia, disponibilidad de biológico. No mide lo que dice medir: validez."},
+    {q:"La coordinadora descarta antes de tabular las respuestas que contradicen su hipótesis.", a:2,
+     e:"El investigador está metiendo su sesgo en los resultados. Falla la objetividad, aunque el instrumento en sí esté bien."}
+  ], ["Confiabilidad", "Validez", "Objetividad"]);
+
+  /* ---------- 4 · Fuentes ---------- */
+  quiz("t4", "t4-score", [
+    {q:"Encuesta casa a casa a las madres de la comuna 4.", a:0, e:"La recoges tú, de primera mano, para este estudio: dato primario."},
+    {q:"Focus group con madres comunitarias del barrio.", a:0, e:"También es de primera mano. Que sea cualitativo no lo hace secundario: primario/secundario habla del origen, no del tipo de dato."},
+    {q:"Actas y reportes de supervisión de las jornadas de vacunación del año pasado de la Secretaría.", a:1, e:"Ya estaban documentados y son propiedad de la Secretaría, que controla su uso: secundario interno."},
+    {q:"Proyecciones de población por edad del DANE.", a:2, e:"Documentadas por otro actor, de acceso público y con metodología conocida: secundario externo de buena fiabilidad."},
+    {q:"Noticia de un periódico regional sobre un brote de sarampión en el departamento.", a:2, e:"Externo y ya documentado. El tema advierte que la prensa está sujeta a interpretación y puede traer sesgo."},
+    {q:"Comentarios de la comunidad en la página de Facebook de la alcaldía sobre las vacunas.", a:2, e:"Internet y redes sociales: secundario externo, con mucho volumen, pero la intención del mensaje no siempre es clara."}
+  ], ["Primario", "Secundario interno", "Secundario externo"]);
+
+  /* ---------- 5 · Abierta vs cerrada ---------- */
+  var closed = [["No había el biológico", 38], ["Horario del puesto", 27], ["Miedo a reacciones", 18], ["Se le olvidó la fecha", 11], ["Otro", 6]];
+  var open = [
+    ["Fui dos veces y me dijeron que no había la de los 18 meses.", "→ código: desabastecimiento"],
+    ["Trabajo hasta las 6 y el puesto cierra a las 4. Los sábados no abren.", "→ código: horario"],
+    ["A la vecina el niño le dio fiebre con la vacuna y me dio miedo.", "→ código: miedo · rumor de vecinos"],
+    ["Se me mojó el carné y no sé cuál le toca.", "→ código: pérdida del carné (no estaba en las opciones cerradas)"]
+  ];
+  var t5 = document.getElementById("t5"), t5o = document.getElementById("t5-out");
+  var modes = ["Pregunta cerrada", "Pregunta abierta"];
+  function show5(m){
+    Array.prototype.forEach.call(t5.children, function(b, j){ b.setAttribute("aria-selected", j === m ? "true" : "false"); });
+    if (m === 0){
+      t5o.innerHTML = '<div class="bars">' + closed.map(function(c){
+        return '<div class="bar"><span>' + c[0] + '</span><span class="track"><span class="fill" style="display:block;width:' + c[1] + '%"></span></span><span class="v">' + c[1] + '%</span></div>';
+      }).join("") + '</div>' +
+      '<p class="fb" style="margin-top:12px"><b>Lo que ganas:</b> se cuantifica de inmediato; en Power BI esto es un conteo por categoría (frecuencias del tema 3). <b>Lo que arriesgas:</b> si ninguna opción encaja, la gente marca cualquiera. Por eso el tema recomienda siempre añadir «Otro».</p>';
+    } else {
+      t5o.innerHTML = '<div class="quotes">' + open.map(function(q){
+        return '<div class="quote">«' + q[0] + '»<span>' + q[1] + '</span></div>';
+      }).join("") + '</div>' +
+      '<p class="fb" style="margin-top:12px"><b>Lo que ganas:</b> respuestas profundas y cosas que no habías pensado (el carné mojado). <b>Lo que arriesgas:</b> no se cuantifica directo; hay que leer, interpretar y codificar cada respuesta antes de contarla.</p>';
+    }
+  }
+  modes.forEach(function(m, i){
+    var b = el("button", {"class":"tab", role:"tab", type:"button", "aria-selected":"false"}, m);
+    b.addEventListener("click", function(){ show5(i); });
+    t5.appendChild(b);
+  });
+  show5(0);
+
+  /* ---------- 6 · Herramientas ---------- */
+  var TOOLS = [
+    {id:"enc", n:"Encuesta", d:"Recoge preferencias, opiniones y elecciones de la población objetivo. De las de mayor uso y fiabilidad: su tabulación reduce la subjetividad del recolector."},
+    {id:"son", n:"Sondeo", d:"Una sola pregunta de opción única o múltiple. Para tomar un pulso rápido; por ser corto, la gente responde más."},
+    {id:"ent", n:"Entrevista", d:"Trato directo entrevistador–entrevistado. Telefónica, cara a cara o CAPI (cara a cara registrada en computador)."},
+    {id:"del", n:"Técnica Delphi", d:"Expertos reciben las estimaciones de otros expertos y revisan las suyas con base en esa información."},
+    {id:"foc", n:"Focus group", d:"Conversación guiada por un moderador experto con un guion de temas. Entre 6 y 8 participantes, elegidos por sus características y sin conocer el tema de antemano."},
+    {id:"cue", n:"Cuestionario", d:"Conjunto impreso de preguntas abiertas o cerradas. El cerrado controla el marco de referencia y sirve para obtener hechos."}
+  ];
+  var SITS = [
+    {q:"Saber rápido si la comunidad prefiere jornada de vacunación el sábado o el domingo.", t:"son", e:"Una sola pregunta, respuesta rápida: es exactamente lo que el tema describe como sondeo."},
+    {q:"Estimar qué porcentaje de 400 hogares tiene el esquema atrasado.", t:"enc", e:"Necesitas una cifra comparable entre muchos hogares: encuesta personal con preguntas cerradas, idealmente con tablet (registro tipo CAPI)."},
+    {q:"Entender los miedos y creencias de las madres sobre las vacunas.", t:"foc", e:"Es dato cualitativo y se enriquece con la conversación entre pares. Recuerda: 6 a 8 madres y un moderador con experiencia."},
+    {q:"Proyectar cuántas dosis pedir el próximo año cuando no hay historia confiable.", t:"del", e:"Sin datos históricos, el criterio de expertos que se revisa entre sí es la salida. Eso es Delphi."},
+    {q:"Conocer en detalle las barreras que vive una vacunadora en terreno.", t:"ent", e:"Información directa y detallada de una persona clave: entrevista cara a cara."},
+    {q:"Recoger por escrito, de 60 docentes de jardines, cuántos niños llegan sin carné.", t:"cue", e:"Preguntas por escrito, sobre hechos concretos, que cada docente responde por su cuenta: cuestionario cerrado."}
+  ];
+  var grid = document.getElementById("t6-grid"), t6 = document.getElementById("t6"), t6o = document.getElementById("t6-out");
+  TOOLS.forEach(function(x){
+    var c = el("div", {"class":"tool", "data-id":x.id});
+    c.appendChild(el("h3", null, x.n));
+    c.appendChild(el("p", null, x.d));
+    grid.appendChild(c);
+  });
+  SITS.forEach(function(s, i){
+    var b = el("button", {"class":"sitbtn", type:"button", "aria-pressed":"false"}, s.q);
+    b.addEventListener("click", function(){
+      Array.prototype.forEach.call(t6.children, function(o, j){ o.setAttribute("aria-pressed", j === i ? "true" : "false"); });
+      Array.prototype.forEach.call(grid.children, function(c){ c.classList.toggle("hit", c.getAttribute("data-id") === s.t); });
+      var tool = TOOLS.filter(function(x){ return x.id === s.t; })[0];
+      t6o.innerHTML = "<b>" + tool.n + ".</b> " + s.e;
+    });
+    t6.appendChild(b);
+  });
+
+  /* ---------- 8 · Ficha técnica ---------- */
+  var FICHA = [
+    {k:"Herramienta", v:"Encuesta personal con tablet (CAPI): 18 preguntas cerradas y 2 abiertas.", bad:false, why:"Cumple: dice qué herramienta se usó y cómo."},
+    {k:"Población", v:"Niños.", bad:true, why:"Demasiado vaga: ¿de qué edad, de qué territorio? Debería decir «hogares con niños menores de 6 años de la comuna 4 de Montería»."},
+    {k:"Muestra", v:"400 hogares.", bad:true, why:"El tema exige definir de forma clara el proceso de selección de la muestra. «400» no dice cómo se escogieron."},
+    {k:"Ventana de recolección", v:"Del 15 de abril al 10 de mayo de 2026.", bad:false, why:"Cumple: fija el espacio temporal en que se recogieron los datos."},
+    {k:"Período de referencia", v:"—", bad:true, why:"Falta. ¿Las dosis preguntadas son de toda la vida del niño o del último año? Es el período al que corresponden los datos, distinto de cuándo se recogieron."},
+    {k:"Autorización", v:"Aval del comité de ética y consentimiento informado firmado.", bad:false, why:"Cumple y además corresponde al primer paso del plan."},
+    {k:"Supervisión", v:"Un supervisor por cada 5 encuestadores; revisión diaria de GPS.", bad:false, why:"Cumple: describe el modelo de supervisión."}
+  ];
+  var t8 = document.getElementById("t8"), t8o = document.getElementById("t8-out");
+  FICHA.forEach(function(f){
+    var b = el("button", {type:"button", "aria-pressed":"false"}, '<span class="k">' + f.k + '</span><span>' + f.v + '</span>');
+    b.addEventListener("click", function(){
+      if (t8.getAttribute("data-checked") === "1") return;
+      b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") === "true" ? "false" : "true");
+    });
+    t8.appendChild(b);
+  });
+  document.getElementById("t8-check").addEventListener("click", function(){
+    t8.setAttribute("data-checked", "1");
+    var hits = 0, misses = 0, fps = 0, lines = [];
+    Array.prototype.forEach.call(t8.children, function(b, i){
+      var f = FICHA[i], marked = b.getAttribute("aria-pressed") === "true";
+      b.classList.remove("good", "miss", "fp");
+      if (f.bad && marked){ hits++; b.classList.add("good"); lines.push("✔ <b>" + f.k + ":</b> " + f.why); }
+      else if (f.bad && !marked){ misses++; b.classList.add("miss"); lines.push("✘ <b>" + f.k + " (se te pasó):</b> " + f.why); }
+      else if (!f.bad && marked){ fps++; b.classList.add("fp"); lines.push("✘ <b>" + f.k + " (estaba bien):</b> " + f.why); }
+    });
+    var total = FICHA.filter(function(f){ return f.bad; }).length;
+    t8o.innerHTML = '<div class="risk ' + (misses || fps ? "on" : "") + '"><b>Encontraste ' + hits + ' de ' + total + ' fallas' + (fps ? ' y marcaste ' + fps + ' línea(s) que estaban bien' : '') + '.</b><ul>' +
+      lines.map(function(l){ return "<li>" + l + "</li>"; }).join("") + '</ul><p style="margin-top:8px">La trampa típica es confundir <b>cuándo se recogió</b> el dato con <b>a qué período corresponde</b>. El tema pide las dos.</p></div>';
+  });
+  document.getElementById("t8-reset").addEventListener("click", function(){
+    t8.removeAttribute("data-checked");
+    Array.prototype.forEach.call(t8.children, function(b){ b.setAttribute("aria-pressed", "false"); b.classList.remove("good", "miss", "fp"); });
+    t8o.innerHTML = "";
+  });
+
+  /* ---------- 9 · Mini cuestionario ---------- */
+  quiz("t9", "t9-score", [
+    {q:"Según el tema, ¿cuál es el primer paso del planeamiento de la recolección?", o:["Calcular la muestra", "Capacitar a los encuestadores", "Obtener la autorización o acceso"], a:2,
+     e:"La autorización es la condición previa: garantiza que podrás continuar con el proceso."},
+    {q:"Organizas un focus group con 15 madres «para aprovechar la convocatoria». ¿Qué dice el tema?", o:["Está bien: más participantes, más datos", "No es recomendable: lo indicado son 6 a 8 participantes", "Solo si hay dos moderadores"], a:1,
+     e:"Con más de 8 se complica la moderación y no todos alcanzan a intervenir."},
+    {q:"Tu encuesta cerrada sobre motivos de no vacunación no tiene opción «Otro». ¿Cuál es el riesgo?", o:["Que la pregunta sea más difícil de cuantificar", "Que ninguna opción refleje lo que piensa la persona", "Que se vuelva una pregunta abierta"], a:1,
+     e:"El tema lo señala como la desventaja de las cerradas, y por eso recomienda añadir «Otro»."},
+    {q:"Usarás los RIPS de la EPS para medir consultas pediátricas. ¿Qué condición pone el tema a un dato secundario?", o:["Que sea gratuito", "Que sea fiable y se conozca la metodología con que se recogió", "Que esté en formato Excel"], a:1,
+     e:"Sin conocer cómo se recogió, no puedes darle credibilidad ni saber cómo analizarlo."},
+    {q:"En la ficha técnica escribes «datos recogidos en mayo de 2026». ¿Qué te falta según el tema?", o:["El período al que corresponden los datos", "El nombre del software usado", "El presupuesto del estudio"], a:0,
+     e:"El tema pide la ventana de recolección y también el período de referencia. Son cosas distintas."}
+  ], null, function(g, n){
+    var p = Math.round(g / n * 100);
+    return p + " % · " + (p >= 70 ? "Dominas lo esencial del tema." : "Repasa las secciones 2, 6 y 8 antes de la evaluación.");
+  });
+})();
+</script>
+
+</body></html>
